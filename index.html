@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>WorldCast: Exploring Intelligent Visual Generation in World State Prediction</title>
+<meta name="description" content="WorldCast is a benchmark of 320 manually designed cases across eight categories for multi-step world state prediction with multimodal generative models.">
+<meta name="theme-color" content="#ffffff">
+<meta name="color-scheme" content="light">
+<meta property="og:type" content="website">
+<meta property="og:title" content="WorldCast: Exploring Intelligent Visual Generation in World State Prediction">
+<meta property="og:description" content="A benchmark for multi-step world state prediction: 320 cases, 1,352 visual states, 8 categories, 12 models.">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="assets/css/style.css?v=29">
+<script>
+  (function (r) {
+    r.className = r.className.replace('no-js', 'js');
+    var still = /[?&]motion=off\b/.test(location.search) || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+    r.classList.add(still ? 'still' : 'motion');
+  })(document.documentElement);
+</script>
+<script src="assets/data/data.js?v=29" defer></script>
+<script src="assets/data/fig1.js?v=29" defer></script>
+<script src="assets/data/fig8.js?v=29" defer></script>
+<script src="assets/js/wall.js?v=34" defer></script>
+<script src="assets/js/main.js?v=29" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav" id="nav">
+  <div class="nav-bar">
+    <a class="nav-brand" href="#top" aria-label="WorldCast, back to top">W<small>ORLD</small>C<small>AST</small></a>
+    <nav class="nav-menu" id="nav-menu" aria-label="Sections">
+      <a href="#overview">Overview</a>
+      <a href="#tasks">Tasks</a>
+      <a href="#leaderboard">Leaderboard</a>
+      <a href="#findings">Findings</a>
+      <a href="#agentic">Agentic</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#comparison">Comparison</a>
+      <a href="#evaluation">Evaluation</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="pill pill-xs" data-link="paper" href="#bibtex">Paper</a>
+      <a class="pill pill-xs" data-link="code" href="#bibtex">Code</a>
+    </div>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-menu" aria-label="Sections">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top" aria-label="WorldCast">
+  <div class="hero-banner">
+    <div class="wall" aria-hidden="true">
+      <div class="wall-stage"><div class="wall-plane" id="wall-plane"></div></div>
+      <div class="wall-shade"></div>
+    </div>
+    <div class="hero-title">
+      <h1 class="wordmark" aria-label="WorldCast">W<small>ORLD</small>C<small>AST</small></h1>
+      <p class="hero-sub">Exploring Intelligent Visual Generation<br class="br-wide"> in World State Prediction</p>
+    </div>
+  </div>
+  <div class="hero-meta">
+    <ul class="authors" aria-label="Authors">
+      <li>Wenhao Yan<sup>1,*</sup></li>
+      <li>Haodong Li<sup>2</sup></li>
+      <li>Xiaotong Li<sup>3,†</sup></li>
+      <li>Yaxin Luo<sup>5</sup></li>
+      <li>Zhengrong Yue<sup>6</sup></li>
+      <li>Jialv Zou<sup>7</sup></li>
+      <li>Xu Huang<sup>4</sup></li>
+      <li>Haojin Yang<sup>4</sup></li>
+      <li>Nan Jia<sup>7</sup></li>
+      <li>Yan Feng<sup>3</sup></li>
+      <li>Peng Pei<sup>3</sup></li>
+      <li>Xunliang Cai<sup>3</sup></li>
+    </ul>
+    <ul class="affils" aria-label="Affiliations">
+      <li><sup>1</sup>THU</li>
+      <li><sup>2</sup>CUHK</li>
+      <li><sup>3</sup>Meituan LongCat</li>
+      <li><sup>4</sup>PKU</li>
+      <li><sup>5</sup>MBZUAI</li>
+      <li><sup>6</sup>SJTU</li>
+      <li><sup>7</sup>HUST</li>
+    </ul>
+    <p class="affil-note"><sup>*</sup>Work done during internship at Meituan.<span><sup>†</sup>Project Lead.</span></p>
+    <div class="hero-cta">
+      <a class="pill pill-dark" data-link="paper" href="#bibtex">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
+        <span>Paper</span>
+      </a>
+      <a class="pill pill-dark" data-link="code" href="#bibtex">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 7-5 5 5 5M16 7l5 5-5 5"/></svg>
+        <span>Code</span>
+      </a>
+      <a class="pill pill-dark" data-link="benchmark" href="#bibtex">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg>
+        <span>Full Benchmark</span>
+      </a>
+      <a class="pill" href="#gallery">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5v14l11-7z"/></svg>
+        <span>Case Gallery</span>
+      </a>
+      <a class="pill" href="#bibtex">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6h14M5 12h14M5 18h9"/></svg>
+        <span>BibTeX</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ OVERVIEW ============ -->
+<section class="section" id="overview">
+  <div class="wrap">
+    <header class="section-head">
+      <h2 class="headline reveal"><span class="sec-n">01</span>Overview</h2>
+      <p class="lead reveal">WorldCast evaluates whether visual generative systems can forecast successive future world states from multimodal observations and heterogeneous references. The benchmark targets L3–L4 capabilities, where understanding and generation must be tightly integrated to model physical changes, action sequences and visual reasoning.</p>
+    </header>
+    <div class="stats stats-4 reveal">
+      <div class="stat"><p class="stat-v"><span class="num" data-count="320">320</span></p><p class="stat-k">manually designed cases</p></div>
+      <div class="stat"><p class="stat-v"><span class="num" data-count="1352">1,352</span></p><p class="stat-k">requested visual states</p></div>
+      <div class="stat"><p class="stat-v"><span class="num" data-count="8">8</span></p><p class="stat-k">task categories, L3 and L4</p></div>
+      <div class="stat"><p class="stat-v"><span class="num" data-count="12">12</span></p><p class="stat-k">image and video models</p></div>
+    </div>
+
+    <figure class="anim-wrap reveal" id="fig1-wrap">
+      <div class="anim-card">
+        <div class="anim-fig" id="fig1" role="img" aria-label="Figure 1. (a) The generative capability tree with levels L1 to L4. (b) The WorldCast benchmark: 320 cases, 1,352 states and 12 models, evaluated on Task Completion, Causal Plausibility and Visual Consistency, with the overall performance index: GPT-Image-2.5 Sunburst 72.8, Seedance 2.0 47.2, Nano Banana Pro 42.8, Wan 3.0 39.9, Seedream 5.0 Pro 33.6, SenseNova-U1 20.1, Emu3.5 12.3."></div>
+        <div class="fig1-sub" aria-hidden="true"><span>(a)</span><span>(b)</span></div>
+        <button class="anim-replay" id="fig1-replay" type="button" aria-label="Replay Figure 1 animation"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.3-5.6M4 4v4h4"/></svg>Replay</button>
+      </div>
+      <figcaption><b>Figure 1.</b> (a) The visual generative capability tree organizes intelligent visual generation into a four-layer hierarchy (L1–L4). (b) WorldCast targets L3–L4 capabilities of dynamically transforming real-world context into successive future world states through unified multimodal understanding and generation.</figcaption>
+    </figure>
+
+    <details class="abstract reveal" open>
+      <summary><span>Abstract</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+      <p>Humans interpret multimodal observations of the world and forecast how it will evolve. Recent multimodal generative systems have demonstrated similar capabilities: they can integrate multimodal context and synthesize visual outputs that depict changes in the world. To characterize this emerging trajectory, we organize model capabilities into a four-level hierarchy and discover that higher-level tasks remain relatively underexplored despite model progress. To bridge this gap, we explore model performance on multi-step world state prediction, a high-level task that requires models to forecast successive future world states from multimodal observations and diverse references. Such a task requires models to possess entangled understanding and generation capabilities, as well as extensive world knowledge to translate human action sequences, physical transformations, and abstract visual reasoning into coherent visual outputs. We introduce WorldCast, comprising 320 manually designed cases across eight categories, and evaluate 12 representative models. The conducted experiments yield three key insights: (a) advances in frontier models are rapidly pushing the boundaries of intelligent world modeling, with the GPT-Image-2.5 System scoring 72.8 and demonstrating early-stage visual state prediction capabilities on real-world tasks; (b) WorldCast reveals substantial gaps between models: even Nano Banana Pro reaches only 42.8 and the best open-source model scores 20.1, with deficits in handling complex context, entangled references, and reasoning-heavy tasks; (c) strong generative models effectively draw on the capabilities of their underlying language models. These findings highlight the need for multimodal generative models that are capable of linguistically structured planning and reasoning while also being deeply unified to faithfully simulate real-world states.</p>
+    </details>
+  </div>
+</section>
+
+<!-- ============ EXAMPLE ============ -->
+<section class="section" id="example">
+  <div class="wrap">
+    <header class="section-head">
+      <h2 class="headline reveal"><span class="sec-n">02</span>Task Example</h2>
+      <p class="lead reveal">An In-Context Procedural Learning case (L4). The model must interpret the manual, plan the assembly order, and render each intermediate state while preserving the work surface and component appearance.</p>
+    </header>
+    <div class="duel reveal" id="duel"></div>
+    <p class="caption">Adapted from Figure 2 of the paper. GPT-Image-2.5 completes the key milestones; Wan&nbsp;3.0 fails to follow the assembly order.</p>
+  </div>
+</section>
+
+<!-- ============ TASKS ============ -->
+<section class="section" id="tasks">
+  <div class="wrap">
+    <header class="section-head">
+      <h2 class="headline reveal"><span class="sec-n">03</span>Task Categories</h2>
+      <p class="lead reveal">Categories are distinguished by where the information governing a future process is encoded and what reasoning is required to translate it into visual state transitions.</p>
+    </header>
+    <div class="tasks reveal" id="tasks-ui">
+      <div class="task-list" id="task-list" role="tablist" aria-label="Task categories"></div>
+      <div class="task-panel" id="task-panel" role="tabpanel" aria-live="polite"></div>
+    </div>
+    <details class="fig-details reveal">
+      <summary>Figure 3: representative examples of the eight categories</summary>
+      <figure class="paper-fig">
+        <button class="zoomable" data-full="assets/media/figures/task-categories.webp" aria-label="Enlarge Figure 3"><img src="assets/media/figures/task-categories.webp" alt="Figure 3: representative examples of the eight WorldCast categories." loading="lazy"></button>
+        <figcaption><b>Figure 3.</b> Representative examples of the eight WorldCast categories. The benchmark comprises 320 manually designed cases with 1,352 requested visual states.</figcaption>
+      </figure>
+    </details>
+  </div>
+</section>
+
+<!-- ============ LEADERBOARD ============ -->
+<section class="section" id="leaderboard">
+  <div class="wrap">
+    <header class="section-head">
+      <h2 class="headline reveal"><span class="sec-n">04</span>Leaderboard</h2>
+      <p class="lead reveal">Twelve image and video generation systems evaluated under the same state-sequence protocol. Scores range from 0 to 100; higher is better.</p>
+    </header>
+    <div class="lb reveal" id="lb">
+      <div class="lb-bar">
+        <div class="seg-ctl" id="lb-metric" role="group" aria-label="Score shown"></div>
+        <div class="lb-tools">
+          <select id="lb-category" aria-label="Category score"></select>
+          <div class="seg-ctl" id="lb-view" role="group" aria-label="View">
+            <button type="button" data-view="chart" aria-pressed="true">Chart</button>
+            <button type="button" data-view="table" aria-pressed="false">Table</button>
+          </div>
+        </div>
+      </div>
+      <div class="lb-legend" id="lb-legend" aria-hidden="true"></div>
+      <div class="lb-chart" id="lb-chart" role="list"></div>
+      <div class="lb-table" id="lb-table" hidden>
+        <div class="table-wrap" tabindex="0" aria-label="Leaderboard table; scroll horizontally for all category scores"><table><thead id="lb-thead"></thead><tbody id="lb-tbody"></tbody></table></div>
+      </div>
+      <div class="tip" id="lb-tip" role="tooltip" hidden></div>
+    </div>
+    <p class="caption">GPT-Image-2.5 (Sunburst) is paired with GPT-6 Astra and GPT-Image-2 with GPT-5.5. The table reports baseline systems without agentic enhancement. Each model uses its native output interface: interleaved, grid, video, or plan&nbsp;&amp;&nbsp;iterate.</p>
+  </div>
+</section>
+
+<!-- ============ FINDINGS ============ -->
+<section class="section" id="findings">
+  <div class="wrap">
+    <header class="section-head">
+      <h2 class="headline reveal"><span class="sec-n">05</span>Findings</h2>
+    </header>
+
+    <div class="finding reveal">
+      <div class="finding-text">
+        <p class="finding-n">Finding 1</p>
+        <h3>Frontier systems exhibit early-stage L4-level visual state prediction.</h3>
+        <p>GPT-Image-2.5 scores above 60 on all five L4 categories and retains 71.6 on L4, only 2.2 below its L3 score. The best open-source model, SenseNova-U1, drops from 24.4 to 15.0: performance gaps widen at higher levels.</p>
+      </div>
+      <figure class="chart-card" id="gap-chart" aria-label="L3 and L4 overall scores for six models"></figure>
+    </div>
+
+    <div class="finding reveal">
+      <div class="finding-text">
+        <p class="finding-n">Finding 2</p>
+        <h3>Strong generators draw on their underlying language models.</h3>
+        <p>Pairing Nano Banana Pro with GPT-6 Astra as the enhancer improves every category, raising its overall score from 42.8 to 61.2, yet it still trails the GPT-Image family. Replacing GPT-5.5 with GPT-6 for GPT-Image-2 yields only a marginal gain, with a decline in Physical Simulation.</p>
+      </div>
+      <figure class="chart-card" id="enh-chart" aria-label="Category-wise scores with and without GPT-6 Astra as the enhancer"></figure>
+    </div>
+
+    <div class="finding reveal">
+      <div class="finding-text">
+        <p class="finding-n">Finding 3</p>
+        <h3>Interleaved generation helps, but accumulated context remains a challenge.</h3>
+        <p>Switching GPT-Image-2.5 from interleaved to grid output reduces its overall score by 22.7 points, most sharply on Logic and Rules (74.3 → 23.0). Across four generation steps, weaker models degrade as context accumulates, while GPT-Image-2.5 remains stable.</p>
+      </div>
+      <figure class="chart-card" id="step-chart" aria-label="Visual output accuracy across four generation steps"></figure>
+    </div>
+
+    <div class="block reveal">
+      <div class="block-head">
+        <h3>Qualitative failure patterns</h3>
+        <p>Models exhibit distinct failure patterns across the three evaluation dimensions; scores are on a 0–3 scale.</p>
+      </div>
+      <figure class="paper-fig">
+        <button class="zoomable" data-full="assets/media/figures/failure-modes.webp" aria-label="Enlarge Figure 4"><img src="assets/media/figures/failure-modes.webp" alt="Figure 4: qualitative failure patterns such as unintended rotation, wrong reflection, erroneous density, shape drift and incorrect assembly order." loading="lazy"></button>
+        <figcaption><b>Figure 4.</b> Qualitative examples on WorldCast.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ AGENTIC ============ -->
+<section class="section" id="agentic">
+  <div class="wrap">
+    <header class="section-head">
+      <h2 class="headline reveal"><span class="sec-n">06</span>Towards Agentic Visual Generation</h2>
+      <p class="lead reveal">We build two Codex-based harnesses with the same generation budget: an inspect-and-revise loop without coding tools, and a coding-first loop that constructs and inspects intermediate visual artifacts before generation.</p>
+    </header>
+    <div class="finding reveal">
+      <div class="finding-text">
+        <h3>Iterative refinement and visual coding raise the ceiling.</h3>
+        <p>The inspection loop lifts GPT-Image-2.5 from 72.8 to 80.2 and GPT-6-enhanced Nano Banana Pro from 61.2 to 72.5. Coding tools push the best overall score to 82.4, with the largest gains on Visual Goal Realization, Logic and Rules, and Physical Simulation, where code makes intermediate states explicit.</p>
+        <div class="mini-stats">
+          <div><b>82.4</b><span>best overall score<br>coding-first inspection loop</span></div>
+          <div><b>+20.0</b><span>GPT-Image-2.5 on Visual<br>Goal Realization</span></div>
+        </div>
+      </div>
+      <figure class="chart-card" id="harness-chart" aria-label="Overall score by agentic harness"></figure>
+    </div>
+    <figure class="anim-wrap reveal">
+      <div class="anim-card">
+        <div class="anim-fig" id="fig8" role="img" aria-label="Figure 8. An agent observes the task, uses tools and code to simulate, reasons, and iterates on generation. For a towel-folding question, plain Nano Banana Pro and Nano Banana Pro with Codex inspection are compared with the tool-using version. The trajectory shows the agent simulating all steps, a first attempt without the simulation artifacts that fails at step 3, and regeneration that references the simulation result together with other steps."></div>
+        <button class="zoomable anim-zoom" type="button" data-full="assets/media/figures/agentic-coding.webp" aria-label="Enlarge Figure 8"><svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>Enlarge</button>
+        <button class="anim-replay" id="fig8-replay" type="button" aria-label="Replay Figure 8 animation"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.3-5.6M4 4v4h4"/></svg>Replay</button>
+      </div>
+      <figcaption><b>Figure 8.</b> Visual coding as procedural guidance. Left: results with different model harnesses. Right: the agent simulates the full steps, notices that its first attempt without the simulation fails at step 3, then regenerates by referencing the simulation result together with the other steps.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ GALLERY ============ -->
+<section class="section" id="gallery">
+  <div class="wrap">
+    <header class="section-head">
+      <h2 class="headline reveal"><span class="sec-n">07</span>Case Gallery</h2>
+      <p class="lead reveal">Each card shows the input reference and two randomly selected baselines. Hover over or click a card to inspect every main baseline as an animation alongside its individual states.</p>
+    </header>
+    <div class="chips g-cats reveal" id="g-cats" role="group" aria-label="Category"></div>
+    <div class="g-carousel reveal" role="region" aria-label="Representative cases">
+      <button class="icon-btn g-arrow" id="g-prev" type="button" aria-label="Previous cases" aria-controls="g-track"><svg viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></svg></button>
+      <ul class="g-track" id="g-track" tabindex="0"></ul>
+      <button class="icon-btn g-arrow" id="g-next" type="button" aria-label="Next cases" aria-controls="g-track"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button>
+    </div>
+    <div class="g-foot"><span id="g-pos" aria-live="polite"></span><button class="pill pill-xs" id="g-play" type="button" aria-pressed="false">Pause scrolling</button></div>
+  </div>
+</section>
+
+<!-- ============ COMPARISON ============ -->
+<section class="section" id="comparison">
+  <div class="wrap">
+    <header class="section-head">
+      <h2 class="headline reveal"><span class="sec-n">08</span>Comparison</h2>
+      <p class="lead reveal">Pairs of complete sequences with a clear difference on one metric. Each pair states only which side is better.</p>
+    </header>
+    <div class="cmp reveal" id="cmp">
+      <div class="cmp-bar">
+        <div class="seg-ctl" id="cmp-metric" role="group" aria-label="Metric"></div>
+        <div class="cmp-nav"><button class="icon-btn" id="cmp-prev" type="button" aria-label="Previous pair"><svg viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></svg></button><span id="cmp-pos" aria-live="polite"></span><button class="icon-btn" id="cmp-next" type="button" aria-label="Next pair"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button></div>
+      </div>
+      <div id="cmp-body"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EVALUATION ============ -->
+<section class="section" id="evaluation">
+  <div class="wrap">
+    <header class="section-head">
+      <h2 class="headline reveal"><span class="sec-n">09</span>Evaluation</h2>
+      <p class="lead reveal">Image grids, interleaved images and videos are all evaluated as ordered sequences of keyframes along three complementary dimensions.</p>
+    </header>
+    <div class="eval-grid reveal">
+      <div class="eval-left">
+      <div class="dims">
+        <article class="dim" data-dim="tc"><p class="dim-k">TC</p><div><h3>Task Completion</h3><p>Whether the sequence visibly realizes the intended task: a weighted average of Progress Alignment and Outcome Completion.</p></div></article>
+        <article class="dim" data-dim="cp"><p class="dim-k">CP</p><div><h3>Causal Plausibility</h3><p>Whether transitions follow physical laws, logical rules and task-specific dynamics, penalizing impossible transformations or reversed cause and effect.</p></div></article>
+        <article class="dim" data-dim="vc"><p class="dim-k">VC</p><div><h3>Visual Consistency</h3><p>Whether identity, count, geometry, scale, material, camera and background persist where the task does not require change.</p></div></article>
+      </div>
+        <div class="pipeline" aria-label="Evaluation pipeline">
+          <div class="pipe"><span class="pipe-i">1</span><h4>Agentic video adapter</h4><p>GPT-6 Astra selects task-aligned keyframes from generated videos, following an inclusion-first principle.</p></div>
+          <div class="pipe"><span class="pipe-i">2</span><h4>Human-annotated hints</h4><p>Judge-only hints identify task-critical objects, milestones and constraints.</p></div>
+          <div class="pipe"><span class="pipe-i">3</span><h4>LMM-as-a-judge</h4><p>GPT-5.5 rates TC, CP and VC on a 0–3 scale for every output sequence.</p></div>
+          <div class="pipe"><span class="pipe-i">4</span><h4>Final score</h4><p class="formula">Rescale(α<sub>1</sub>TC + α<sub>2</sub>CP + α<sub>3</sub>VC)</p></div>
+        </div>
+      </div>
+      <figure class="chart-card radar-card" id="radar" aria-label="Task Completion, Causal Plausibility and Visual Consistency for six main models"></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BIBTEX ============ -->
+<section class="section" id="bibtex">
+  <div class="wrap wrap-narrow">
+    <div class="bib">
+      <div class="bib-head"><span>Citation <span class="mute">· BibTeX</span></span><button class="pill pill-xs" id="bib-copy" type="button">Copy</button></div>
+<pre id="bib-text">@article{yan2026worldcast,
+  title   = {WorldCast: Exploring Intelligent Visual Generation in World State Prediction},
+  author  = {Yan, Wenhao and Li, Haodong and Li, Xiaotong and Luo, Yaxin and Yue, Zhengrong and Zou, Jialv and Huang, Xu and Yang, Haojin and Jia, Nan and Feng, Yan and Pei, Peng and Cai, Xunliang},
+  journal = {arXiv preprint},
+  year    = {2026}
+}</pre>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <p><span class="foot-brand">W<small>ORLD</small>C<small>AST</small></span><span class="mute">Exploring Intelligent Visual Generation in World State Prediction</span></p>
+    <a href="#top">Back to top</a>
+  </div>
+</footer>
+
+<dialog class="case-dlg" id="case-dlg" aria-labelledby="case-title"><div class="dlg-in" id="case-body"></div></dialog>
+<dialog class="lightbox" id="lightbox" aria-label="Enlarged image"><button class="lb-close" type="button" aria-label="Close">×</button><img id="lightbox-img" alt=""></dialog>
+</body>
+</html>
