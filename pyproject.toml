@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "worldcast-eval"
+version = "0.1.0"
+description = "Evaluation toolkit for the WorldCast world-state prediction benchmark"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+dependencies = ["Pillow>=10.4,<13", "datasets>=4,<5", "openai>=1.70"]
+
+[project.scripts]
+worldcast = "worldcast.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+worldcast = ["resources/*.json"]

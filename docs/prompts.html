@@ -1,0 +1,122 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>WorldCast Generation Templates</title>
+<style>body{max-width:960px;margin:40px auto;padding:20px;font-family:system-ui}pre{white-space:pre-wrap;line-height:1.5;padding:18px;background:#f4f4f4}main{margin:40px 0}h1{font-size:24px}</style>
+<h1>Generation template snapshot</h1><p>Presentation templates, not executable environment enforcement. These prompts do not run automatically in the evaluation CLI. Environment notes describe the source adapter; it is not bundled here. User-edited iterative settings are not evidence of historical experiment configuration.</p>
+<main class="paper" id="AVA"><header class="suite">WorldCast · Video Adapter</header><article class="card">
+<div class="titlebar"><h1>Agentic Video Adapter</h1></div><div class="content">
+<p class="role"><br></p>
+<h2>Prompt Template</h2><pre class="output-box">You are selecting semantic benchmark frames from a generated video.
+
+Inspect the source MP4 itself. You may repeatedly use ffmpeg to sample any
+timestamps and compare frames. Use the text instruction, reference
+images, complete video, and neighboring video states to identify the
+{{STEP_COUNT}} frames that most clearly demonstrate the requested key steps or
+milestones. The selected timestamps must be strictly increasing. Do not select
+evenly spaced timestamps merely for convenience. If a requested state never
+appears, select the closest visible state in its correct chronological region
+and mark it as achieved=false. This is frame selection, not quality scoring.
+
+You MUST always select and extract exactly {{STEP_COUNT}} frames, even when the
+video is poor, incomplete, ambiguous, or does not visibly achieve one or more
+requested states. In that extreme case, you may choose the temporal point based
+on when the milestone is expected to occur as specified in the prompt. Never
+omit a step, refuse selection, stop early, or leave an output file unwritten
+because no ideal frame exists. For every missing state, choose the semantically
+closest visible frame from the most appropriate chronological region; use
+neighboring frames and the requested order to make the best approximation. Set
+achieved=false and briefly explain the mismatch in evidence, but still extract
+that frame and include it in the JSON result.
+
+Use this ffmpeg executable:
+{{FFMPEG_EXECUTABLE}}
+
+Extract the final full-resolution frames to exactly these paths:
+{{OUTPUT_FRAME_PATHS}}
+
+Return the matching JSON only after every file has been written. Each filename
+must be the basename only and exactly step_1.jpg through
+step_{{STEP_COUNT}}.jpg; do not return a temporary sampling path such as
+frames/t2.4.jpg. Before returning, verify that all {{STEP_COUNT}} required JPEG
+files exist, are non-empty, and correspond one-to-one with the JSON entries.
+
+Evaluation input:
+{{EVALUATION_INPUT_JSON}}
+</pre>
+<h2>Template Variables</h2><ul class="data bi-list">
+<li><p>{{STEP_COUNT}}: required number of steps.</p></li>
+<li><p>{{FFMPEG_EXECUTABLE}}: runtime ffmpeg executable path.</p></li>
+<li><p>{{OUTPUT_FRAME_PATHS}}: one absolute output path per line, step_1.jpg through step_N.jpg.</p></li>
+<li><p>{{EVALUATION_INPUT_JSON}}: text_instruction, required_output_steps, reference_images, and source_video.</p></li></ul>
+<h2 class="output-title">Output Contract</h2><pre class="output-box">{
+  "steps": [
+    {
+      "step": 1,
+      "timestamp_seconds": 0.0,
+      "filename": "step_1.jpg",
+      "achieved": true,
+      "evidence": "Visible evidence for the requested milestone, or a brief mismatch explanation."
+    }
+  ],
+  "overall_notes": "Brief notes about the selection."
+}</pre>
+<h2>Environment &amp; Enforcement</h2><ul class="bi-list environment-list"><li><p><b>Execution:</b> Runs codex exec with --ephemeral, --skip-git-repo-check and --output-schema in a scratch working directory. Reference images are supplied using -i.</p></li><li><p><b>Model:</b> gpt-6-astra with medium reasoning effort.</p></li><li><p><b>Tools:</b> Command execution is needed to run ffmpeg and inspect or extract frames (workspace-write sandbox). The adapter performs frame selection only, not image generation or quality scoring.</p></li><li><p><b>Timeout and validation:</b> Subprocess timeout: 1,800 seconds. Exactly N frames, strictly increasing timestamps, sequential step indices, exact JPEG filenames, and non-empty output files are validated by the runner.</p></li><li><p><b>Source:</b> src/worldcast/video.py.</p></li></ul>
+</div></article><footer class="footer">Agentic Video Adapter · Semantic Frame Selection</footer></main><main class="paper prompt-group" id="ITERATIVE_PROMPTS"><header class="suite">MultiTurnBench · Iterative Prompts</header><article class="card"><section class="prompt-group-item" id="RETRY"><div class="titlebar"><h1>Prompt - Iterative</h1></div><div class="content"><p class="tool-config"><code>code_mode: off; shell: off</code></p><h2>Main Prompt</h2><pre class="output-box">{{ORIGINAL_TASK}}
+
+## Required Workflow
+
+1. Plan the intended image sequence using the task and supplied references.
+2. Generate the images using the image-generation tool or API assigned to the current baseline.
+3. Inspect each image and the full sequence for task compliance, geometry, orientation, and continuity. Edit or regenerate when useful, then inspect again.
+4. Select the best existing sequence within the shared call and time budgets. Do not revise images that are already correct.
+
+## Constraints
+
+- Use the image-generation and editing tool or API assigned to the current baseline; viewing images is unrestricted. Do not switch to another image model or provider.
+- Do not use code or modeling tools to construct, render, or use intermediate visual artifacts.
+- All image-generation and editing attempts, including failures, share one per-Case budget of 2 × {{STEP_COUNT}} calls ({{MAX_IMAGE_CALLS_2N}} submissions). Initial generations, regenerations, and edits all count. Never reset or bypass this budget.
+- Non-image-generation tool use does not consume image-generation calls, but must remain within the Case time limit. Any image-generation or editing API call counts regardless of its purpose.
+- At the cap, make no further image-generation or editing calls. Select from existing outputs and report any remaining shortfall.
+- You have 150 minutes total, with reminders every 15 minutes.
+- Use the supplied task and references and your own work from this Case. Do not read other Cases, sessions, baseline results, scores, Judge hints, or evaluation files. Do not modify source data, reference files, other runs&#x27; outputs, the budget gate, ledger, or configuration, or start other sessions.
+
+## Output Contract
+
+- Return exactly {{STEP_COUNT}} accepted final images in step order, one absolute Markdown image link per step: ![Step N](/absolute/path/to/image.png).
+- Include only the selected final images, not discarded drafts or superseded revisions. Verify that each path points to an existing image.
+- If the required sequence cannot be completed within the budget, return the available selected images and briefly state the shortfall; do not invent files or exceed the budget.</pre></div></section><section class="prompt-group-item" id="RETRY_TOOLS_V4"><div class="titlebar"><h1>Prompt - Iterative + Code Tools</h1></div><div class="content"><p class="tool-config"><code>code_mode: on; shell: on</code></p><h2>Main Prompt</h2><pre class="output-box">{{ORIGINAL_TASK}}
+Each step contains one textual instruction and one image. Don&#x27;t output all steps in one image, instead output {{STEP_COUNT}} images interleaved with text description. Do not render the textual instructions, step labels, captions, explanatory text, arrows, or guide graphics inside the images unless visible text is explicitly required by the user&#x27;s task.
+
+## Required Workflow
+
+1. Plan each intended output. Use the task and references to describe the content, composition, action or state, viewpoint, and continuity requirements of every image. Check that the descriptions form the requested progression and distinguish intended changes from properties that must remain stable. Gather additional context, including Web Search when available and useful.
+2. Build a task-specific visual reasoning artifact before the first image-generation call. Use code or a modeling tool to represent the relevant geometry, arrangement, state progression, motion, or causal relationships. Choose a suitable method, such as SVG, Canvas, Three.js, Python, or another renderer; no language is required. Render a meaningful visual result, not just code, logs, or prose.
+3. Open and visually inspect the rendering. Check assumptions, spatial relationships, state transitions, and task constraints against what is actually visible. Correct empty, misleading, or inaccurate artifacts and inspect them again. Use the findings to refine the image descriptions. A successful script exit alone is not visual inspection.
+4. Prepare and generate the sequence. Consolidate the descriptions, references, and artifact findings into clear generation instructions. Explicitly decide whether the inspected artifact should be supplied as an image reference; attaching it is optional, but constructing and inspecting it are required. Use the image-generation and editing tool or API assigned to the current baseline.
+5. Inspect and revise. Examine every generated image and the complete ordered sequence for task compliance, direction, geometry, causal plausibility, visual continuity, and the final outcome. When useful, revise the plan, supporting context, code artifact, or generated images. Render and inspect changed artifacts before using them, and recheck the sequence after each material revision. Do not revise outputs that are already correct.
+6. Select the final sequence. Stop within the shared call and time budgets, choose the best existing outputs, and verify their order and quantity. State unresolved limitations rather than bypassing the limits.
+
+## Constraints
+
+- Use the image-generation and editing tool or API assigned to the current baseline; viewing images is unrestricted. Do not switch to another image model or provider.
+- You may use code or modeling tools to construct, render, inspect, and revise intermediate visual artifacts.
+- All image-generation and editing attempts, including failures, share one per-Case budget of 2 × {{STEP_COUNT}} calls ({{MAX_IMAGE_CALLS_2N}} submissions). Initial generations, regenerations, and edits all count. Never reset or bypass this budget.
+- Non-image-generation tool use does not consume image-generation calls, but must remain within the Case time limit. Any image-generation or editing API call counts regardless of its purpose.
+- At the cap, make no further image-generation or editing calls. Select from existing outputs and report any remaining shortfall.
+- You have 150 minutes total, with reminders every 15 minutes.
+- Use the supplied task and references and your own work from this Case. Do not read other Cases, sessions, baseline results, scores, Judge hints, or evaluation files. Do not modify source data, reference files, other runs&#x27; outputs, the budget gate, ledger, or configuration, or start other sessions.
+
+## Artifact Records
+
+Save the source and rendered visual files in the Case workspace. Record source_path, rendered_path, render_command, and inspection_finding in visual_artifacts.json, along with whether the artifact is used as generation context. For interactive or animated artifacts, save representative frames or a video. Preserve useful versions and revision history separately from final outputs.
+
+Bare code, JSON, console output, prose screenshots, unchanged references, copies of generated images, and artifacts created only after image generation do not satisfy the pre-generation requirement. If an artifact does not help resolve uncertainty or validate the plan, improve it before proceeding. Do not modify source data, reference files, or other runs&#x27; outputs.
+
+## Output Contract
+
+- Return exactly {{STEP_COUNT}} accepted final images in step order, interleaved with text, using absolute Markdown image paths.
+- Include only selected final images, not code artifacts, discarded drafts, or superseded revisions. Verify that the image files exist and that the output order and count are correct.
+- If the required sequence cannot be completed within the budget, return the available selected images and briefly state the shortfall; do not invent files or exceed the budget.</pre></div></section></article></main><main class="paper prompt-group" id="TASK_ADAPTERS"><header class="suite">MultiTurnBench · Task Input Templates</header><article class="card"><section class="prompt-group-item" id="GRID_MODE"><div class="titlebar"><h1>Grid Mode</h1></div><div class="content"><h2>Main Prompt</h2><pre class="output-box">{{ORIGINAL_TASK}}
+Output N steps, and arrange the N steps in a {{LAYOUT}} grid.
+Please collage all the steps into one image. Do not render any step labels, captions, instructions, explanatory text, arrows, or guide graphics inside the image unless visible text is explicitly required by the user's task.</pre></div></section><section class="prompt-group-item" id="INTERLEAVED_MODE"><div class="titlebar"><h1>Interleaved Model</h1></div><div class="content"><h2>Main Prompt</h2><pre class="output-box">{{ORIGINAL_TASK}}
+Output each step with one textual instruction and one image. Don't output all steps in one image, instead output N images interleaved with text description. Do not render the textual instructions, step labels, captions, explanatory text, arrows, or guide graphics inside the images unless visible text is explicitly required by the user's task.</pre></div></section><section class="prompt-group-item" id="VIDEO_MODE"><div class="titlebar"><h1>Video Model</h1></div><div class="content"><h2>Main Prompt</h2><pre class="output-box">{{ORIGINAL_TASK}}
+Create a single coherent video that visually carries out the requested process from beginning to end. Show every requested stage in the specified chronological order, with each stage clearly visible and connected through natural motion. Do not use a split screen or other instructional overlays.</pre></div></section></article></main>
+</html>

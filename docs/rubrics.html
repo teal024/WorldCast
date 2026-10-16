@@ -1,0 +1,250 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>WorldCast Judge Rubrics</title><style>body{max-width:960px;margin:40px auto;padding:20px;font-family:system-ui}pre{white-space:pre-wrap;line-height:1.5}section{break-before:page}</style><h1>WorldCast Judge Rubrics</h1><p>rubrics-20260921-494aa595c6f9</p><section id="PA"><h2>Progress Alignment Evaluation</h2><pre>Progress Alignment Evaluation
+Your task is to act as a PROGRESS ALIGNMENT AUDITOR in Strict Evaluation Mode.
+Inspect the complete ordered image sequence and judge whether the overall task unfolds in accordance with the user&#x27;s intended process. Use the text instruction, HINTS, and reference images to determine the task-critical milestones, then judge whether the sequence visibly realizes those milestones in the required or logically necessary order and develops in the way the user expected. You should assess whether the whole sequence unfolds correctly and give a sequence-level evaluation; a correct final result alone is insufficient.
+Scoring Hierarchy
+SCORE 2   [INTENDED PROCESS AND ALL MILESTONES REALIZED]
+-
+The sequence&#x27;s overall task unfolds in the way the user intended, and every required milestone is visibly realized rather than merely approached, initiated, implied, or described.
+-
+The process shown across the sequence matches the expected interpretation of the user&#x27;s request, rather than merely containing isolated correct actions, a plausible start, or a correct-looking endpoint.
+-
+The task-critical stages or milestones appear with sufficient visible specificity and in the required or logically necessary order, with no important omission, skipped dependency, premature outcome, unrelated segment, contradiction or regression. Correct start and end states do not compensate for a missing critical process stage.
+SCORE 1   [CORE ALIGNMENT REALIZED WITH SECONDARY DEFECTS]
+-
+The user&#x27;s intended core process is visibly recognizable and every indispensable task-critical milestone is substantially realized, but the overall process still has secondary incompleteness or imprecision.
+-
+Any missing, ambiguous, premature, out-of-order, interrupted, regressed, unrelated, or visually unsupported content is limited to a non-core stage or secondary detail whose failure does not prevent realization of the user&#x27;s central intent.
+-
+If even one indispensable task-critical milestone is absent, only approached or initiated, visually ambiguous, skipped, contradicted, carried out in a fundamentally wrong way, or claimed without direct visual support, assign SCORE 0 rather than SCORE 1.
+-
+When all indispensable milestones are realized, prominent unrequested instructional text, captions, step labels, arrows, or guide graphics may still reduce the sequence to SCORE 1.
+SCORE 0   [KEY MILESTONE NOT REALIZED]
+-
+At least one indispensable task-critical milestone is absent, only approached or initiated, visually ambiguous, skipped, premature, out of order in a way that breaks the process, interrupted, regressed, contradicted, carried out in a fundamentally wrong way, or claimed without direct visual support.
+-
+A milestone is indispensable when it is explicitly emphasized by the text instruction or HINTS, is necessary to realize the user&#x27;s central intent, or is a required dependency for a later key state or result.
+-
+Other correct milestones, a matching subject or setting, isolated relevant actions, a plausible start, or a correct-looking endpoint do not compensate for one uncompleted indispensable milestone.
+-
+The sequence also receives SCORE 0 when it remains essentially static despite required change, or when its changes do not form a recognizable realization of the user&#x27;s intent.
+Supplementary Rules
+Base your judgment solely on the image itself; in most cases, any text or guiding cues added on top of the image should not affect your evaluation. When the image is only partially visible, evaluate it according to the information that is visible.
+Evaluation Steps
+- Use the text instruction, HINTS, and reference images to identify the task-critical milestones, mark as indispensable every milestone explicitly emphasized by the text instruction or HINTS, necessary to realize the user&#x27;s central intent, or required as a dependency for a later key state or result, and identify any required or logically necessary ordering. Inspect the complete ordered sequence and assign the scores according to the Scoring Hierarchy. Assign an initial score using the scoring criteria. Then challenge that score by actively looking for previously missed problems, counterevidence, or alternative interpretations in the complete ordered sequence. Check whether these objections are supported by visible evidence and warrant changing the score; do not force a score change. Finally, give the revised final score (0, 1, or 2), retaining the initial score if it remains supported.
+Evaluation Data
+-
+TEXT INSTRUCTION
+-
+HINTS
+-
+REFERENCE AND INITIAL IMAGES
+-
+ALL ORDERED GENERATED IMAGES
+
+Output Contract
+Return only a JSON object. Use an integer score (0, 1, or 2) and briefly explain the judgment with specific visual evidence.
+{
+&quot;score&quot;: 0,
+&quot;evidence&quot;: &quot;Brief visual evidence supporting the score.&quot;
+}</pre></section><section id="OC"><h2>Outcome Completion Evaluation</h2><pre>Outcome Completion Evaluation
+Your task is to act as an OUTCOME COMPLETION AUDITOR in Strict Evaluation Mode. Given the text instruction, HINTS, reference images, and the final generated image, judge whether the final result fulfills the requested outcome. The original text instruction is for generating a sequence of frames, but no intermediate generated images are provided here, so you should only evaluate the final image and check if it meets the outcome of the instruction.
+Scoring Hierarchy
+SCORE 1   [REQUESTED OUTCOME FULLY REALIZED]
+-
+The final image visibly realizes the user&#x27;s requested endpoint, and every indispensable outcome requirement is satisfied rather than merely approached, initiated, implied, or described.
+-
+The required final entities, quantities, attributes, configuration, spatial relations, placement, and reference-specific features are correct wherever they are specified by the text instruction or HINTS or necessary to the user&#x27;s central goal.
+-
+The result is complete with sufficient visible specificity to verify it. No required final-state element is missing, contradictory, incorrectly substituted, or hidden in a way that prevents verification.
+SCORE 0   [REQUESTED OUTCOME NOT FULLY REALIZED]
+-
+At least one required endpoint condition or specified final-state detail is missing, incorrect, contradicted, incomplete, or visually unverifiable. Secondary defects in required details also receive SCORE 0; there is no partial credit.
+-
+An outcome requirement is indispensable when it is explicitly emphasized as a required final condition by the text instruction or HINTS, or when its absence prevents realization of the user&#x27;s central requested result. An intermediate milestone is not automatically an endpoint requirement.
+-
+The outcome is only asserted by a caption, label, arrow, model-authored plan, or plausible narrative rather than shown. Do not infer successful placement, transfer, removal, or completion solely because an object is missing or obscured. When absence itself is the requested endpoint, credit it only if the relevant final region is visible and supports that requirement.
+Evaluation Steps
+- Read the text instruction, HINTS, and reference images to extract the requested endpoint. Separate final-state requirements from instructions about how to reach that state; do not require the final image to repeat intermediate actions. Inspect the final generated image and match each endpoint requirement to direct visible evidence. Assign an initial score using the scoring criteria. Then challenge that score by actively looking for previously missed problems, counterevidence, or alternative interpretations in the final generated image only. Check whether these objections are supported by visible evidence and warrant changing the score; do not force a score change. Finally, give the revised final score (0 or 1), retaining the initial score if it remains supported.
+Evaluation Data
+-
+TEXT INSTRUCTION
+-
+HINTS
+-
+REFERENCE AND INITIAL IMAGES
+-
+FINAL GENERATED IMAGE ONLY (ONE IMAGE; NO INTERMEDIATE GENERATED IMAGES)
+
+Output Contract
+Return only a JSON object. Use an integer score (0 or 1) and briefly explain the judgment with specific visual evidence.
+{
+&quot;score&quot;: 0,
+&quot;evidence&quot;: &quot;Brief visual evidence supporting the score.&quot;
+}</pre></section><section id="CP"><h2>Causal Plausibility Evaluation</h2><pre>Causal Plausibility Evaluation
+Your task is to act as a SEQUENCE-LEVEL CAUSAL AND WORLD-LAW AUDITOR in Strict Evaluation Mode.
+Inspect the complete ordered image sequence produced by the generation model and judge whether the overall process follows the object transformations, physical laws, game rules, everyday phenomena, logical dependencies, and task-world rules emphasized by the text instruction and HINTS. Apply realistic everyday physics by default, but follow explicit fictional, game, diagrammatic, symbolic, or other task-specific world rules when the task establishes them.
+Scoring Hierarchy
+SCORE 3   [FULLY PLAUSIBLE]
+-
+All concerns in the text instruction or HINTS are satisfied with direct visual evidence.
+-
+The complete process is fully plausible, and every critical adjacent transition visibly follows from the state and action before it.
+-
+The core mechanisms, constraints, object topology, and long-range dependencies all hold consistently, with no identifiable deviation from the governing rules and no skipped mechanism disguised by a plausible final state.
+SCORE 2   [KEY MECHANISM PLAUSIBLE WITH OTHER MINOR FLAWS]
+-
+Some new local rule deviation, weakened mechanism, incomplete long-range dependency, or minor unsupported transition is still found.
+-
+The concerns in the text instruction or HINTS are partially satisfied, but the intended causal mechanism remains recognizable: the critical states and transitions broadly follow the expected governing rules.
+-
+The overall process remains fluent and broadly instruction-aligned; no critical mechanism is skipped, contradicted, or replaced by an abrupt structural transformation.
+SCORE 1   [CORE MECHANISM RECOGNIZABLE BUT VISIBLY FLAWED]
+-
+The intended core causal mechanism remains visibly recognizable, and at least one critical cause-to-effect transition is supported, but a core concern in the text instruction or HINTS or a key verifiable condition in the HINTS is clearly violated at a critical state or transition.
+-
+The broad phenomenon follows the applicable physical law, game rule, everyday phenomenon, or task-world rule, but a critical action, prerequisite, constraint, or transition is missing, unsupported, or mechanically incompatible.
+-
+Alternatively, the process itself may be broadly plausible but lacks a strong connection to the reference images, text instruction, or HINTS.
+-
+Mere thematic resemblance or a plausible final state is insufficient for SCORE 1 when the central causal mechanism is not visibly realized.
+SCORE 0   [CORE MECHANISM ABSENT, CONTRADICTORY, OR IMPOSSIBLE]
+-
+The central causal mechanism required to produce the main change is absent, reversed, contradicted, or replaced by an unsupported transformation, so the intended process is not causally recognizable as realized.
+-
+The main result depends on a task-critical object, action, constraint, or state appearing, disappearing, teleporting, duplicating, or changing incompatibly without a visible or ordinarily inferable cause.
+-
+The overall process is self-contradictory, or a key mechanism makes the main change impossible under the applicable world rules.
+-
+A matching subject, broad phenomenon, or plausible-looking endpoint does not rescue a sequence whose core causal chain is missing or fundamentally invalid.
+Supplementary Rules
+-
+If the output is static or changes too little, judge it according to the text instruction; when the task requires visible change, Causal Plausibility cannot exceed 1.
+-
+If any task-critical transition cannot be causally reconciled from the visible states under the applicable world rules, Causal Plausibility cannot exceed 1. Ordinary unshown intermediate motion may be inferred only when the visible endpoints are mutually compatible and require no invented intervention, constraint change, or hidden state.
+-
+Grade an abrupt or omitted transition by its causal severity rather than abruptness alone. A harmless compressed intermediate action needs no penalty when the visible endpoints remain mutually reachable; a local weakened or imprecise mechanism supports SCORE 2; an unsupported task-critical transition is capped at SCORE 1; and a self-contradictory or world-impossible core mechanism supports SCORE 0.
+-
+If a task-relevant object or tool visible in one generated image is absent from a later image without a visible or ordinarily inferable removal, placement, consumption, transformation, occlusion, or exit from the frame, object conservation and causal continuity are violated and Causal Plausibility cannot exceed 1—even if the object is no longer needed after the action. If the unexplained disappearance removes the central mechanism, makes the main result causally unsupported, or is part of an impossible or self-contradictory core process, assign SCORE 0.
+Evaluation Steps
+- Follow the visible changes from the first generated image to the last. First identify the applicable world assumptions and the task-critical states, constraints, and dependencies from the text instruction, HINTS, and reference images. Use realistic everyday physics by default, but follow explicit fictional, game, diagrammatic, symbolic, or other task-specific rules when provided.
+- For every adjacent pair, identify the visible prior state, the visible action or cause, and the resulting state. Track every task-relevant object and tool across the pair, including where it remains, how it moves, and whether any appearance, disappearance, duplication, consumption, transformation, occlusion, or exit from the frame has visible or ordinarily inferable causal support. Inspect the relevant prerequisites and constraints, including support, contact, containment, object topology and component connectivity, material behavior, conservation of object count, temporal ordering, tool availability, geometry, and task-specific logical rules. Judge whether each cause can plausibly produce the state that follows.
+- Check non-adjacent and long-range dependencies, including whether an early action enables or prevents a later state. Grade deviations by causal severity: distinguish harmless temporal compression, a local weakened or imprecise mechanism, an unsupported task-critical transition, and an impossible or self-contradictory core process. Keep Causal Plausibility separate from visual continuity: count an identity, shape, or appearance change here only when it breaks the causal mechanism or makes the resulting state unreachable under the applicable world rules.
+- Assign an initial score using the scoring criteria. Then challenge that score by actively looking for previously missed problems, counterevidence, or alternative interpretations in the complete ordered sequence. Check whether these objections are supported by visible evidence and warrant changing the score; do not force a score change. Finally, give the revised final score (0, 1, 2, or 3), retaining the initial score if it remains supported.
+Evaluation Data
+-
+TEXT INSTRUCTION
+-
+HINTS
+-
+REFERENCE AND INITIAL IMAGES
+-
+ALL ORDERED GENERATED IMAGES
+
+Output Contract
+Return only a JSON object. Use an integer score (0, 1, 2, or 3) and briefly explain the judgment with specific visual evidence.
+{
+&quot;score&quot;: 0,
+&quot;evidence&quot;: &quot;Brief visual evidence supporting the score.&quot;
+}</pre></section><section id="VC"><h2>Visual Consistency Evaluation</h2><pre>Visual Consistency Evaluation
+Your task is to act as a MULTI-FRAME CONTINUITY AUDITOR in Strict Evaluation Mode. Compare the complete ordered image sequence and evaluate whether visual state that should persist remains consistent across frames. Only the specific state change explicitly requested by the user or visibly required by the causal process is exempt from Visual Consistency penalties; unrelated changes to identity, geometry, material, topology, mechanism structure, camera, or background remain Visual Consistency errors.
+Scoring Hierarchy
+SCORE 3   [FULLY CONSISTENT]
+-
+Task-relevant invariants such as identity, count, shape, scale, color, material, topology, mechanism structure, relative position, camera, and background remain stable.
+-
+Every change is directly justified by the visible process, with no identifiable appearance, disappearance, duplication, teleportation, structural replacement, or cumulative drift.
+-
+Unless explicitly requested, no new instructional caption, step label, explanatory text, arrow, or guide graphic appears in the generated images; scene-native text already present in the reference is preserved normally.
+SCORE 2   [MINOR ISSUES BUT KEY OBJECTS STABLE]
+-
+Key objects emphasized by the HINTS or text instruction show only slight drift that can recover in later frames.
+-
+Objects not emphasized by the HINTS or text instruction may have a small but real identity, geometry, scale, position, or background continuity deviation.
+SCORE 1   [CONTINUITY ISSUE BUT KEY OBJECTS RECOGNIZABLE]
+-
+The target remains broadly recognizable, but continuity is poor; a key object has at least one clear color, identity, geometry, scale, topology, mechanism-structure, position, or background continuity deviation.
+-
+Objects not emphasized by the HINTS or text instruction have strong deviations that affect the whole sequence.
+SCORE 0   [TOTAL FAILURE]
+-
+The target object is not preserved at all, or there is unexplained loss, addition, or duplication of important objects, a major scale jump, teleportation, background reset, severe deformation, topology or mechanism replacement, bizarre texture, or inexplicable distortion.
+-
+An important object disappears without a visible removal or placement action. Do not infer that it was safely moved merely because it is absent later.
+-
+If an object or tool explicitly named by the HINTS, or required to remain consistent in instruction disappears, appears, or duplicates without a visible removal, placement, entry, exit, consumption, transformation, or occlusion, assign SCORE 0.
+Evaluation Steps
+- Compare adjacent and non-adjacent images across the complete ordered sequence. Track every task-relevant object and tool from frame to frame, including its count and visible location, and form a score by checking for unjustified changes in identity, count, shape, scale, color, material, topology, mechanism structure, relative position, camera, or background, including appearance, disappearance, duplication, teleportation, structural replacement, cumulative drift, distortion. Exempt only the specific visual changes directly required by the text instruction, or visibly established causal process.
+- Assign an initial score using the scoring criteria. Then challenge that score by actively looking for previously missed problems, counterevidence, or alternative interpretations in the complete ordered sequence. Check whether these objections are supported by visible evidence and warrant changing the score; do not force a score change. Finally, give the revised final score (0, 1, 2, or 3), retaining the initial score if it remains supported.
+Evaluation Data
+-
+TEXT INSTRUCTION
+-
+HINTS
+-
+REFERENCE AND INITIAL IMAGES
+-
+ALL ORDERED GENERATED IMAGES
+
+Output Contract
+Return only a JSON object. Use an integer score (0, 1, 2, or 3) and briefly explain the judgment with specific visual evidence.
+{
+&quot;score&quot;: 0,
+&quot;evidence&quot;: &quot;Brief visual evidence supporting the score.&quot;
+}</pre></section><section id="SA"><h2>Step Accuracy Evaluation</h2><pre>Step Accuracy Evaluation
+Your task is to act as a DESIGNATED-STEP ACCURACY AUDITOR in Strict Evaluation Mode.
+Use the text instruction, HINTS, reference images, and the model&#x27;s text plan paired with the designated generated image to evaluate that image only.
+Extract the concrete milestone or task-relevant change required for this step, then judge whether the image visibly realizes that requirement, makes positive task-relevant progress, and matches its paired plan.
+Scoring Hierarchy
+SCORE 1   [STEP REQUIREMENT REALIZED]
+-
+The image visibly realizes the requirement for this exact step in the ordered sequence. Any explicitly required action, state, entity, quantity, attribute, spatial relation, or reference relation for this step is satisfied.
+-
+The visible action or state agrees with the model&#x27;s text plan paired with this image and produces positive progress toward the user&#x27;s task. The model&#x27;s plan does not override the user&#x27;s instruction, HINTS, or reference requirements; following a wrong or irrelevant plan is not sufficient.
+-
+The designated step satisfies the constraints applicable to its own action or state and is physically plausible. Required contact, support, containment, geometry, object count, and material behavior are visibly compatible with the depicted action.
+-
+No task-relevant object appears, disappears, duplicates, teleports, or abruptly deforms without a task-valid explanation supported by the supplied visual evidence. Legitimate task-required transformations and supported occlusion are not errors.
+-
+Requirements in HINTS that are declared explicitly relevant to this step are satisfied.
+SCORE 0   [STEP REQUIREMENT NOT REALIZED]
+-
+The visible change is irrelevant to constitute the required milestone. A repeated or essentially unchanged image fails unless maintaining that state is explicitly required for this step.
+-
+The designated image omits or violates a required action, state, entity, quantity, attribute, spatial relation, reference relation, or local constraint for this step; uses the wrong reference; or depicts a different action or state from the one required for this step.
+-
+The image contradicts its paired model-authored plan, or the planned and depicted action fails to produce task-relevant positive progress. Do not treat the plan&#x27;s claim of success as evidence that the image succeeded.
+-
+The designated action or state has a visible physical or task-world violation, such as impossible contact or support, incompatible geometry, or an unexplained appearance, disappearance, duplication, teleportation, or abrupt deformation of a task-relevant object.
+-
+Requirements in HINTS that are declared explicitly relevant to this step are not satisfied or only partially satisfied.
+Evaluation Steps
+Identify the Designated Step
+- Read the designated step index, original text instruction, HINTS, reference images, and model-authored text plan paired with the designated image. Evaluate only that step; do not produce judgments for other steps.
+- Extract the concrete action or state promised for this step, its task-relevant visual requirements, and relevant HINTS. The user&#x27;s task takes priority over an incorrect model plan.
+Evaluate the Designated Generated Image
+- Inspect the designated image&#x27;s action, entities, quantities, attributes, and relations. Check that it substantially realizes its own step requirement and makes meaningful positive progress.
+- Compare the image with its paired textual plan, then check local physical plausibility and task-relevant object integrity. Any deduction must cite visible evidence attributable to the designated step.
+- Other supplied images are context only: do not penalize the designated step because another step fails. Do not invent an unseen comparison state to claim disappearance or deformation.
+Recheck and Return One Judgment
+- Reinspect the designated image and challenge the initial judgment against both score definitions. Correct any unsupported inference or cross-step blame. Output the accuracy in SCORE 0 or 1.
+Evaluation Data
+-
+TEXT INSTRUCTION
+-
+HINTS
+-
+REFERENCE AND INITIAL IMAGES
+-
+DESIGNATED STEP INDEX
+-
+MODEL-AUTHORED TEXT PLAN PAIRED WITH THE DESIGNATED IMAGE
+-
+DESIGNATED GENERATED IMAGE
+
+Output Contract
+Return only a JSON object. Use an integer score (0 or 1) and briefly explain the judgment with specific visual evidence. Set step_index to the designated step; do not score other steps.
+{
+&quot;step_index&quot;: 1,
+&quot;score&quot;: 0,
+&quot;evidence&quot;: &quot;Brief visual evidence for the designated step.&quot;
+}</pre></section></html>
