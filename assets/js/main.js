@@ -4,9 +4,9 @@
 
   // Fill these in when the resources go public; empty links render as "Soon".
   var LINKS = {
-    paper: '',
-    code: '',
-    benchmark: ''
+    paper: 'https://arxiv.org/abs/2610.20731',
+    code: 'https://github.com/teal024/WorldCast',
+    benchmark: 'https://huggingface.co/datasets/wenhaoyan77/WorldCast'
   };
 
   var root = document.documentElement;
